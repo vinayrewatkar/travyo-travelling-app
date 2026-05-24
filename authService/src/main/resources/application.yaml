@@ -1,0 +1,69 @@
+spring:
+  application:
+    name: authService
+
+  config:
+    import: optional:configserver:http://localhost:8888
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/auth_db
+    username: postgres
+    password: root
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        spring.json.add.type.headers: false
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+            scope: email, profile
+
+server:
+  port: 8081
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    prefer-ip-address: true
+
+jwt:
+  private-key-path: classpath:keys/private.pem
+  public-key-path: classpath:keys/public.pem
+  access-token-expiry: 900000       # 15 minutes in ms
+  refresh-token-expiry: 604800000   # 7 days in ms
+
+kafka:
+  topics:
+    user-registered: user.registered
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, metrics
