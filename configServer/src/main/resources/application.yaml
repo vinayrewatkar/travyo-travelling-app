@@ -1,0 +1,20 @@
+server:
+  port: 8888
+
+spring:
+  application:
+    name: configServer
+
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/vinayrewatkar/travyo-configServer
+          default-label: main
+          clone-on-start: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
